@@ -5,11 +5,9 @@
   
   "homepage": "https://vjrdnti.github.io/admission-dashboard",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npm start",
   	"predeploy": "npm run build",
-  	"deploy": "gh-pages -d build",
-  	"build": "react-scripts build"
-  	
+  	"deploy": "gh-pages -d build-prod",  	
 	}
 }
 
