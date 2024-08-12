@@ -6,8 +6,8 @@
   "homepage": "https://vjrdnti.github.io/admission-dashboard",
   "scripts": {
     "start": "npm start",
-  	"predeploy": "npm run build",
-  	"deploy": "gh-pages -d build-prod" 	
+  	"predeploy": "npm run build-prod",
+  	"deploy": "gh-pages -d build" 	
 	}
 }
 
