@@ -7,7 +7,7 @@
   "scripts": {
     "start": "npm start",
   	"predeploy": "npm run build",
-  	"deploy": "gh-pages -d build-prod",  	
+  	"deploy": "gh-pages -d build-prod" 	
 	}
 }
 
