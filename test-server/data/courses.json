@@ -1,0 +1,18 @@
+[
+  { "id": "1", "title": "Btech", "description": "Description 1", "branch": "Computer Science", "district": "District A", "cost": 1200 },
+  { "id": "2", "title": "Btech", "description": "Description 2", "branch": "Mechanical", "district": "District B", "cost": 1340 },
+  { "id": "3", "title": "Btech", "description": "Description 3", "branch": "Civil", "district": "District C", "cost": 1100 },
+  { "id": "4", "title": "Btech", "description": "Description 4", "branch": "Computer Science", "district": "District B", "cost": 800 },
+  { "id": "5", "title": "Btech", "description": "Description 5", "branch": "ECE", "district": "District D", "cost": 1200 },
+  { "id": "6", "title": "Btech", "description": "Description 6", "branch": "Electrical", "district": "District E", "cost": 2200 },
+  { "id": "8", "title": "Btech", "description": "Description 7", "branch": "Chemical", "district": "District F", "cost": 1300 },
+  { "id": "9", "title": "Mtech", "description": "Description 8", "branch": "Computer Science", "district": "District A", "cost": 1150 },
+  { "id": "10", "title": "Mtech", "description": "Description 9", "branch": "Mechanical", "district": "District F", "cost": 1000 },
+  { "id": "11", "title": "Mtech", "description": "Description 9", "branch": "Mechanical", "district": "District F", "cost": 900 },
+  { "id": "12", "title": "Btech", "description": "Description 9", "branch": "Mechanical", "district": "District F", "cost": 950 },
+  { "id": "13", "title": "Btech", "description": "Description 9", "branch": "Mechanical", "district": "District F", "cost": 1230 },
+  { "id": "14", "title": "Btech", "description": "Description 9", "branch": "Mechanical", "district": "District F", "cost": 1500 },
+  { "id": "15", "title": "Btech", "description": "Description 9", "branch": "Mechanical", "district": "District F", "cost": 1700 },
+  { "id": "16", "title": "Btech", "description": "Description 9", "branch": "Mechanical", "district": "District F", "cost": 1050 }
+]
+

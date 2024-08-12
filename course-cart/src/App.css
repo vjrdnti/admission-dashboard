@@ -1,0 +1,116 @@
+/* src/App.css */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow-y: hidden;
+}
+
+.row {
+  padding: 10px;
+}
+
+.logout {
+  position: fixed;
+  top: 1px;
+  right: 2px;
+  padding: 10px 15px;
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.row.user-info {
+  flex: 1;
+  max-height: 240px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.row.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  overflow-y: hidden;
+}
+
+
+.filters {
+  position: auto;
+  display: wrap;
+  width: 200px;
+  padding-right: 12px;
+  margin-right: 10px;
+}
+
+.courses {
+  display: flex;
+  position: absolute;
+  right: 0;
+  left: 270px;
+  gap: 10px; /* Optional: Adds space between the cards */
+  overflow-x: auto;
+  
+}
+
+.course-card {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 10px;
+  width: 235px; /* Adjust width for three cards per row, considering gap */
+  height: 400px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0px 0px 5px grey;
+}
+
+.filters {
+  position: Auto;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 15px;
+  display: wrap;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0px 0px 5px grey;
+  overflow-y: auto;
+}
+
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  background-color: #fff;
+  text-align: center;
+  box-shadow: 1px -2px 5px rgba(0,0,0,0.1);
+}
+
+
+#fixedfilter{
+	position: absolute;
+	bottom: 25px;
+	background-color: #fff;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#fixedheading{
+	position: relative;
+	background-color: #fff;
+	padding-bottom: 5px;
+	text-align: center;
+}

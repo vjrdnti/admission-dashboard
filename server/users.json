@@ -1,0 +1,39 @@
+[
+  {
+    "id": "1",
+    "name": "Tripathi",
+    "email": "tripathi@hmail.com",
+    "course": "Btech",
+    "password": "pw123",
+    "type": "student"
+  },
+  {
+    "id": "2",
+    "name": "Wadekar",
+    "email": "wadekar@hmail.com",
+    "course": "Btech",
+    "password": "pw123",
+    "type": "student"
+  },
+  {
+    "id": "3",
+    "name": "deshpande",
+    "email": "deshpande@hmail.com",
+    "college": "MIT",
+    "password": "pw123",
+    "type": "college"
+  },
+  {
+    "id": "4",
+    "name": "nawale",
+    "email": "nawale@hmail.com",
+    "college": "VIT",
+    "password": "pw123",
+    "type": "college"
+  },
+  {
+    "email": "deshpande@hmail.com",
+    "password": "pw123",
+    "loginType": "college"
+  }
+]
