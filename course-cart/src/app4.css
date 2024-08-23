@@ -1,0 +1,57 @@
+.appp {
+  display: flex;
+  height: 100vh;
+  padding: 2px;
+  overflow-y: hidden;
+  
+}
+
+.f1>content {
+    display: flex;
+    flex-direction: column;
+    bottom: 3px; 
+}
+
+.left-columnn {
+    width: 50%;
+    overflow-y: auto;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+}
+
+.right-columnn {
+    width: 50%;
+    overflow-y: auto;
+    align-items: center;
+    text-align: center;
+    padding:10px;
+}
+
+.course-list {
+  	display: stretch;
+  	overflow-y: auto;
+  	bottom:10px;
+}
+
+.course-card {
+  background-color: white;
+  display:flex;
+  flex-direction: column;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  max-width: 450px;
+  max-height: 250px;
+  margin-bottom: 10px;
+}
+
+#fixed{
+	position: fixed;
+	bottom: 10px;	
+}
+
+
+h3 {
+  margin-bottom: 15px;
+}
+

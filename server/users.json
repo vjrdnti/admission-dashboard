@@ -32,8 +32,10 @@
     "type": "college"
   },
   {
-    "email": "deshpande@hmail.com",
+    "id": "0",
+    "name": "admin",
+    "email": "admin@vm.com",
     "password": "pw123",
-    "loginType": "college"
+    "type": "admin"
   }
 ]

@@ -1,8 +1,8 @@
 {
-  "id": "2",
-  "name": "Wadekar",
-  "email": "wadekar@hmail.com",
-  "course": "Btech",
+  "id": "3",
+  "name": "deshpande",
+  "email": "deshpande@hmail.com",
+  "college": "MIT",
   "password": "pw123",
-  "type": "student"
+  "type": "college"
 }

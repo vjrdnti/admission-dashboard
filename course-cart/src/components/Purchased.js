@@ -22,6 +22,8 @@ const UserInfo = ({ boughtCourses }) => {
           <div>
             <p><b><i>Purchase {index+1}</i></b></p>
             <p><i>Course ID: {purchase.course.id}</i></p>
+            <p><i>Course: {purchase.course.title}</i></p>
+            <p><i>Branch: {purchase.course.branch}</i></p>
             <p><i>Invoice: {purchase.invoice}</i></p>
           </div>
           ))}

@@ -17,7 +17,7 @@
     "district": "District B",
     "description": "Description2",
     "cost": 1200,
-    "status": "unverified"
+    "status": "verified"
   },
   {
     "id": 3,
@@ -147,7 +147,7 @@
     "district": "District B",
     "description": "Description15",
     "cost": 1200,
-    "status": "unverified"
+    "status": "verified"
   },
   {
     "id": 16,
@@ -177,6 +177,36 @@
     "district": "District E",
     "description": "Description18",
     "cost": 1200,
-    "status": "verified"
+    "status": "unverified"
+  },
+  {
+    "title": "Btech",
+    "description": "Description 19",
+    "branch": "petroleum",
+    "district": "Pune",
+    "cost": "350",
+    "college": "MIT",
+    "status": "verified",
+    "id": 19
+  },
+  {
+    "title": "Msc",
+    "description": "asas",
+    "branch": "aassq",
+    "district": "aaaaa",
+    "cost": "12",
+    "college": "MIT",
+    "status": "unverified",
+    "id": 20
+  },
+  {
+    "title": "Btech",
+    "description": "asa",
+    "branch": "12",
+    "district": "zxc",
+    "cost": "111",
+    "college": "MIT",
+    "status": "unverified",
+    "id": 21
   }
 ]

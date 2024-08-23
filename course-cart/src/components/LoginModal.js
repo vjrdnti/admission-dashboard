@@ -21,6 +21,17 @@ const LoginTypeSelector = ({ loginType, handleLoginTypeChange }) => (
       />
       College
     </label>
+    
+     <label>
+      <input
+        type="radio"
+        value="admin"
+        checked={loginType === 'admin'}
+        onChange={handleLoginTypeChange}
+      />
+      Admin
+    </label>
+    
   </div>
 );
 
@@ -65,7 +76,12 @@ const LoginModal = () => {
     if(logindata.user.type===loginType){
       if (logindata.user.type==="college") {
         navigate("/college-dashboard", { replace: true });
-      } else {
+      } 
+      else if (logindata.user.type === "admin") {
+
+          navigate("/admin-dashboard", { replace: true });
+          }
+      else {
         navigate("/dashboard", { replace: true });
       }
       }

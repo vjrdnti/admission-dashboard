@@ -1,5 +1,22 @@
 {
-  "branches": ["Computer Science", "Mechanical", "Civil", "ECE", "Electrical", "Chemical"],
-  "districts": ["District A", "District B", "District C", "District D", "District E", "District F"]
+  "branches": [
+    "AI&DS",
+    "BIOTECH",
+    "CHEMICAL",
+    "CIVIL",
+    "CSE",
+    "ECE",
+    "ELECTRICAL",
+    "IT",
+    "MECHANICAL",
+    "petroleum"
+  ],
+  "districts": [
+    "District A",
+    "District B",
+    "District C",
+    "District D",
+    "District E",
+    "Pune"
+  ]
 }
-

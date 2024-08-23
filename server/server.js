@@ -15,7 +15,6 @@ app.use((req, res, next) => {
 app.use(cors());
 fs.writeFileSync(path.join(__dirname, './data/user.json'), JSON.stringify('[]', null, 2), 'utf-8');
 const users = require('./users.json');
-const filters = require('./data/filters.json');
 //const boughtCourses = require('./data/boughtCourses.json');
 let cart = [];
 
@@ -60,6 +59,7 @@ app.get('/api/user', (req, res) => {
 });
 
 app.get('/api/filters', (req, res) => {
+  let filters = JSON.parse(fs.readFileSync('./data/filters.json'));
   res.status(200).json(filters);
 });
 
@@ -166,6 +166,7 @@ app.delete('/api/cart', (req, res) => {
 app.post('/api/purchasesp', (req, res) => {
   const { invoice } = req.body;
   const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
+  let boughtCourses  = JSON.parse(fs.readFileSync('./data/boughtCourses.json', 'utf-8'));
   cart.forEach(item => {
   	//boughtCourses.forEach(bought => {
   		//if bought.course.isin(cart)
@@ -200,4 +201,40 @@ app.post('/api/add-course', (req, res) => {
    }
 });
 
+app.get('/api/courses-admin', (req, res) => {
+	try{
+   		 const data = fs.readFileSync('./data/courses.json', 'utf8');
+   		 res.status(200).send(JSON.parse(data));
+        }
+    catch (error){
+        res.status(500).send('Error reading courses file');
+    }
+    });
 
+// API to update course status
+app.post('/api/courses-admin', (req, res) => {
+    try{
+    	const updatedCourses = req.body;
+		//let courses = JSON.parse(fs.readFileSync('./data/courses.json', 'utf8'));
+		//courses = courses.map(course => course.id === updatedCourse.id ? updatedCourse : course);
+		const branches = [...new Set(updatedCourses.map(course => course.branch))];
+		const districts = [...new Set(updatedCourses.map(course => course.district))];
+		fs.writeFileSync('./data/courses.json', JSON.stringify(updatedCourses, null, 2), 'utf8');
+		res.status(200).send('Course updated successfully');
+		
+		const filters = {
+        branches: branches.sort(),
+        districts: districts.sort()
+    	};
+    	fs.writeFileSync('./data/filters.json', JSON.stringify(filters, null, 2), 'utf8');
+    
+    } catch (error){
+    	res.status(500).send('Error reading courses file '+error);
+    }
+    });
+    
+    
+app.get('/api/purchases-admin', (req, res) => {
+  const boughtCourses = JSON.parse(fs.readFileSync('./data/boughtCourses.json', 'utf-8'));
+  res.status(200).json(boughtCourses);
+});

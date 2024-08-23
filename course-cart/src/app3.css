@@ -1,0 +1,36 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 2px;
+  
+}
+
+.logout {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+.content {
+    display: flex;
+    bottom: 3px;
+    max-height: 75%; 
+}
+
+.left-column {
+    width: 40%;
+}
+
+.right-column {
+    width: 60%;
+}
+
+h3 {
+  margin-bottom: 15px;
+}
+
