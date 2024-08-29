@@ -5,7 +5,8 @@
     "email": "tripathi@hmail.com",
     "course": "Btech",
     "password": "pw123",
-    "type": "student"
+    "type": "student",
+    "percentile": 96
   },
   {
     "id": "2",
@@ -13,7 +14,8 @@
     "email": "wadekar@hmail.com",
     "course": "Btech",
     "password": "pw123",
-    "type": "student"
+    "type": "student",
+    "percentile": 91
   },
   {
     "id": "3",

@@ -4,6 +4,7 @@ const CourseCard = ({ course, isInCart,isInPurchases, onAddToCart, onRemoveFromC
   return (
     <div className="course-card">
       <h3>{course.title}</h3>
+      <p>{course.branch}</p>
       <p>{course.description}</p>
       {isInPurchases ? ( <button disabled>Course Already Bought</button> ) : ( isInCart ? (
         <button onClick={onRemoveFromCart}>Remove from Cart</button>
@@ -11,6 +12,8 @@ const CourseCard = ({ course, isInCart,isInPurchases, onAddToCart, onRemoveFromC
       <button onClick={onAddToCart}>Add to Cart</button>
         
       ))}
+      <p>intake: {course.intake}</p>
+      <p>forms purchased: {course.count}</p>
     </div>
   );
 };

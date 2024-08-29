@@ -40,7 +40,7 @@
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 
 
@@ -54,26 +54,28 @@
 
 .courses {
   display: flex;
+  flex-direction: row;
   position: absolute;
   right: 0;
   left: 270px;
   gap: 10px; /* Optional: Adds space between the cards */
+  overflow-y: auto;
   overflow-x: auto;
-  
 }
 
 .course-card {
   display: flex;
-  flex-wrap: wrap;
   border: 1px solid #ddd;
   padding: 20px;
   margin-bottom: 10px;
-  width: 235px; /* Adjust width for three cards per row, considering gap */
+  width: 195px; /* Adjust width for three cards per row, considering gap */
   height: 400px;
   box-sizing: border-box;
   border-radius: 8px;
   background-color: #fff;
   box-shadow: 0px 0px 5px grey;
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 .filters {

@@ -65,9 +65,12 @@ app.get('/api/filters', (req, res) => {
 
 app.get('/api/courses', (req, res) => {
   const courses = JSON.parse(fs.readFileSync('./data/courses.json'));
+  const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
   const { degree, branch, district } = req.query;
   //console.log(degree);
-  let filteredCourses = courses.filter(course => course.status === 'verified');;
+  let filteredCourses = courses.filter(course => course.status === 'verified');
+  filteredCourses = courses.filter(course => course.cutoff <= user.percentile);
+  console.log(user.percentile);
   if(degree){
    filteredCourses = filteredCourses.filter(course => course.title === degree);
   }
@@ -167,15 +170,19 @@ app.post('/api/purchasesp', (req, res) => {
   const { invoice } = req.body;
   const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
   let boughtCourses  = JSON.parse(fs.readFileSync('./data/boughtCourses.json', 'utf-8'));
+  let courses = JSON.parse(fs.readFileSync('./data/courses.json', 'utf-8'));
   cart.forEach(item => {
-  	//boughtCourses.forEach(bought => {
-  		//if bought.course.isin(cart)
-  	//});
 	const row = {'user': user, 'course': item, 'invoice': invoice};
-	boughtCourses.push(row);
-	fs.writeFileSync('./data/boughtCourses.json', JSON.stringify(boughtCourses, null, 2), 'utf-8');
+	boughtCourses.push(row);	
 	//console.log(row);
+	courses.forEach(upd =>{
+	  if(upd.id===item.id){
+	  	upd.count+=1;
+	  }
+	 });
   });
+  fs.writeFileSync('./data/courses.json', JSON.stringify(courses, null, 2), 'utf-8');
+  fs.writeFileSync('./data/boughtCourses.json', JSON.stringify(boughtCourses, null, 2), 'utf-8');
   while(cart.length > 0) {
     cart.pop();
    }

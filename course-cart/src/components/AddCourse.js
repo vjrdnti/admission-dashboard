@@ -7,7 +7,10 @@ const AddCourse = () => {
     description: '',
     branch: '',
     district: '',
-    cost: ''
+    cost: '',
+    intake: 0,
+    cutoff: 0,
+    count: 0
   });
 
   // form visibility ko toggle
@@ -39,7 +42,10 @@ const AddCourse = () => {
       description: '',
       branch: '',
       district: '',
-      cost: ''
+      cost: '',
+      intake: 0,
+      cutoff: 0,
+      count: 0
     });
     setShowForm(false);
     alert("course posted for verification");
@@ -82,6 +88,12 @@ const AddCourse = () => {
 
           <label>Cost</label>
           <input type="number" name="cost" value={formData.cost} onChange={handleInputChange} required />
+          
+          <label>intake</label>
+          <input type="number" name="intake" value={formData.intake} onChange={handleInputChange} required />
+          
+          <label>minimum cutoff</label>
+          <input type="number" name="cutoff" value={formData.cutoff} onChange={handleInputChange} required />
           
           <button type="submit" style={{ marginTop: '10px', padding: '10px', backgroundColor: 'blue', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
             Add Course
