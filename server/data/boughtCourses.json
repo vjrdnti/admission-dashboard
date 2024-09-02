@@ -1,1 +1,52 @@
-[]
+[
+  {
+    "user": {
+      "id": "1",
+      "name": "Tripathi",
+      "email": "tripathi@hmail.com",
+      "course": "Btech",
+      "password": "pw123",
+      "type": "student",
+      "percentile": 96
+    },
+    "course": {
+      "id": 2,
+      "title": "Btech",
+      "branch": "CIVIL",
+      "college": "MIT",
+      "district": "District B",
+      "description": "Description2",
+      "cost": 1200,
+      "intake": 60,
+      "count": 0,
+      "cutoff": 91,
+      "status": "verified"
+    },
+    "invoice": "paid 2738 for this course and 1 other on XX/XX/XX"
+  },
+  {
+    "user": {
+      "id": "1",
+      "name": "Tripathi",
+      "email": "tripathi@hmail.com",
+      "course": "Btech",
+      "password": "pw123",
+      "type": "student",
+      "percentile": 96
+    },
+    "course": {
+      "id": 3,
+      "title": "Btech",
+      "branch": "MECHANICAL",
+      "college": "MIT",
+      "district": "District C",
+      "description": "Description3",
+      "cost": 1200,
+      "intake": 60,
+      "count": 1,
+      "cutoff": 90,
+      "status": "verified"
+    },
+    "invoice": "paid 2738 for this course and 1 other on XX/XX/XX"
+  }
+]

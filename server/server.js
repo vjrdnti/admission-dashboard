@@ -111,6 +111,12 @@ app.get('/api/college-posts', (req, res) => {
 });
 
 
+app.get('/api/college-courses-sold', (req, res) => {
+  const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
+  const boughtCourses = JSON.parse(fs.readFileSync('./data/boughtCourses.json', 'utf-8'));
+  res.status(200).json(boughtCourses.filter(item => item.course.college === user.college));
+});
+
 app.post('/api/college-posts', (req, res) => {
   const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
   const postedCourses = JSON.parse(fs.readFileSync('./data/courses.json', 'utf-8'));
@@ -161,10 +167,16 @@ app.post('/api/cart', (req, res) => {
 });
 
 app.delete('/api/cart', (req, res) => {
-  const { courseId } = req.body;
+  const { courseId } = req.body;  
   cart = cart.filter(item => item.id !== courseId);
   res.status(200).json(cart);
 });
+
+app.delete('/api/logout', (req, res) => {
+  cart = [];
+  res.status(200).json(cart);
+});
+
 
 app.post('/api/purchasesp', (req, res) => {
   const { invoice } = req.body;

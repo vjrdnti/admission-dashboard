@@ -21,7 +21,7 @@
     "description": "Description2",
     "cost": 1200,
     "intake": 60,
-    "count": 0,
+    "count": 1,
     "cutoff": 91,
     "status": "verified"
   },
@@ -34,7 +34,7 @@
     "description": "Description3",
     "cost": 1200,
     "intake": 60,
-    "count": 1,
+    "count": 2,
     "cutoff": 90,
     "status": "verified"
   },

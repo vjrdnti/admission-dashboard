@@ -1,9 +1,11 @@
 // src/components/UserInfo.js
 import React, { useState, useEffect } from 'react';
-import Posted from './Posted.js'
+import Posted from './Posted.js';
+import Sold from './Sold.js';
 
 const UserInfo = ({ user }) => {
   const [posts, setPosts] = useState([]);
+  const [purchases, setPurchases] = useState([]);
   
   useEffect(() => {
     const fetchPosts = async () => {
@@ -18,8 +20,22 @@ const UserInfo = ({ user }) => {
         console.error('Error fetching posts:', error);
       }
     };
-    fetchPosts();
     
+    const fetchPurchases = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/college-courses-sold');
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setPurchases(data);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+    
+    fetchPosts();
+    fetchPurchases();
   }, []);
   
   return (
@@ -31,8 +47,11 @@ const UserInfo = ({ user }) => {
             <Posted
               postedCourses={posts}
             />
+            <br></br>
+            <Sold
+              Sold={purchases}
+            />
         </div>
-      {/* Add more user info as needed */}
     </div>
   );
 };
