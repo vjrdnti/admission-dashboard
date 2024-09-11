@@ -48,5 +48,30 @@
       "status": "verified"
     },
     "invoice": "paid 2738 for this course and 1 other on XX/XX/XX"
+  },
+  {
+    "user": {
+      "id": "1",
+      "name": "Tripathi",
+      "email": "tripathi@hmail.com",
+      "course": "Btech",
+      "password": "pw123",
+      "type": "student",
+      "percentile": 96
+    },
+    "course": {
+      "id": 11,
+      "title": "Btech",
+      "branch": "CIVIL",
+      "college": "VIT",
+      "district": "District B",
+      "description": "Description11",
+      "cost": 1200,
+      "intake": 60,
+      "count": 0,
+      "cutoff": 93,
+      "status": "verified"
+    },
+    "invoice": "paid 1394 for this course  on XX/XX/XX"
   }
 ]

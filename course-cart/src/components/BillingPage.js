@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import '../billing.css';
 
-const BillingPage = () => {
+const BillingPage = ({ user }) => {
   const [cart, setCart] = useState([]);
+  const [showBreakdown, setShowBreakdown] = useState(false);
+
   const totalCost = cart.reduce((total, course) => total + course.cost, 0);
   const platformFee = 50;
-  const gst = (12/100)*totalCost;
-  const [showBreakdown, setShowBreakdown] = useState(false);
+  const gst = (12 / 100) * totalCost;
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -22,9 +23,9 @@ const BillingPage = () => {
         console.error('Error fetching cart:', error);
       }
     };
-    fetchCart();  
-  });
-  
+    fetchCart();
+  }, []);
+
   const handleRemoveFromCart = async (courseId) => {
     try {
       const response = await fetch('http://localhost:5000/api/cart', {
@@ -41,32 +42,51 @@ const BillingPage = () => {
     }
   };
 
-  function handleBuyNow(cart) {
-  	var invtotal = totalCost + platformFee + gst;
-  	var num_c = cart.length - 1;
-  	if(num_c==0){ var invoice = 'paid '+ invtotal + ' for this course '+' on XX/XX/XX'; }
-  	else if(num_c===1){
-    	var invoice = 'paid '+ invtotal + ' for this course and ' + num_c +' other on XX/XX/XX';
+  const handleBuyNow = async () => {
+    if (!user) {
+      console.log('User is not set:', user);
+      alert('User not logged in');
+      return;
     }
-    else{
-    	var invoice = 'paid '+ invtotal + ' for this course and ' + num_c +' others on XX/XX/XX';
+
+    const invtotal = totalCost + platformFee + gst;
+    const num_c = cart.length - 1;
+    let invoice;
+
+    if (num_c === 0) {
+      invoice = `paid ${invtotal} for this course on XX/XX/XX`;
+    } else if (num_c === 1) {
+      invoice = `paid ${invtotal} for this course and ${num_c} other on XX/XX/XX`;
+    } else {
+      invoice = `paid ${invtotal} for this course and ${num_c} others on XX/XX/XX`;
     }
-    
-  	fetch('http://localhost:5000/api/purchasesp', {
-  	method: 'POST',
-  	headers: {
-  	  'Content-Type' : 'application/json',
-  	},
-  	body: JSON.stringify({ invoice }),
-  	});
-    alert('Purchase successful!');
-    setCart([]); // Clear the cart after purchase
-  }
-  
+
+    console.log('Preparing to send data:', { user, courses: cart, invoice });
+
+    try {
+      const response = await fetch('http://localhost:5000/api/purchasesp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user, courses: cart, invoice }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      alert('Purchase successful!');
+      setCart([]); // Clear the cart after purchase
+    } catch (error) {
+      console.error('Error processing purchase:', error);
+    }
+  };
+
   const handleBreakdown = () => {
     setShowBreakdown(!showBreakdown);
   };
-  
+
   return (
     <div className="billing-page">
       <h2 className="billing-page-title">Your Cart</h2>
@@ -85,17 +105,15 @@ const BillingPage = () => {
         )}
       </div>
       <div className="billing-summary">
-        <h3 className="total-cost">Total: {totalCost+platformFee+gst} Rs</h3>
+        <h3 className="total-cost">Total: {totalCost + platformFee + gst} Rs</h3>
         <button className="breakdown-btn" onClick={handleBreakdown} disabled={cart.length === 0}>
           Detailed Bill
         </button>
-        <button className="buy-now-btn" onClick={() => handleBuyNow(cart)} disabled={cart.length === 0}>
+        <button className="buy-now-btn" onClick={handleBuyNow} disabled={cart.length === 0}>
           Buy Now
         </button>
         <Link to="/dashboard">
-          <button className="go-to-dashboard">
-            Back to Dashboard
-          </button>
+          <button className="go-to-dashboard">Back to Dashboard</button>
         </Link>
       </div>
       
@@ -110,10 +128,8 @@ const BillingPage = () => {
           </div>
         </div>
       )}
-      
     </div>
   );
 };
 
 export default BillingPage;
-

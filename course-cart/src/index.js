@@ -8,21 +8,27 @@ import CollegeDashboard from './CollegeDashboard'
 import AdminDashboard from './AdminDashboard'
 import LoginModal from './components/LoginModal'
 import reportWebVitals from './reportWebVitals'
+import StudentTable from './components/StudentTable';
+
 const root = ReactDOM.createRoot(document.getElementById('root'))
+const currentUser = JSON.parse(localStorage.getItem('user'));
+
+// Debugging: Check what is being retrieved from localStorage
+console.log('Current User:', currentUser);
+
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <Routes>
-    	<Route path="*" element={<LoginModal />} exact />
+      <Routes>
+        <Route path="*" element={<LoginModal />} exact />
         <Route path="/dashboard" element={<App />} />
         <Route path="/college-dashboard" element={<CollegeDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/billing" element={<BillingPage />} />
+        <Route path="/students" element={<StudentTable />} />
+        <Route path="/billing" element={<BillingPage user={currentUser} />} /> {/* Use currentUser here */}
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
 )
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+
 reportWebVitals()

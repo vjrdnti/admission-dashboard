@@ -1,0 +1,83 @@
+/* Container for the entire modal */
+.login-modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Modal title (Login/Register) */
+  .login-modal h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  /* Container for login type selector */
+  .login-type {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Login type radio buttons */
+  .login-type label {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .login-type input[type="radio"] {
+    margin-right: 0.5rem;
+  }
+  
+  /* Login form inputs */
+  .login-form input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  /* Submit button (Login/Register) */
+  .login-form button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .login-form button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Switch between login and register text */
+  .login-modal p {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #007BFF;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .login-modal p:hover {
+    color: #0056b3;
+  }
+  

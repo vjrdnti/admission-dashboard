@@ -9,6 +9,7 @@ import FixedBottom from './components/FixedBottom';
 import './App.css';
 
 const App = () => {
+  
   const [user, setUser] = useState({'id': '', 'name': '', 'email': '', 'course': '','password': '', 'type': ''});
   const [courses, setCourses] = useState([]);
   const [filters, setFilters] = useState({ branches: [], districts: [] });

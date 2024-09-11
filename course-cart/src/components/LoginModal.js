@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import './LoginModal.css';
 
 const LoginTypeSelector = ({ loginType, handleLoginTypeChange }) => (
   <div className="login-type">
@@ -21,8 +22,7 @@ const LoginTypeSelector = ({ loginType, handleLoginTypeChange }) => (
       />
       College
     </label>
-    
-     <label>
+    <label>
       <input
         type="radio"
         value="admin"
@@ -31,12 +31,58 @@ const LoginTypeSelector = ({ loginType, handleLoginTypeChange }) => (
       />
       Admin
     </label>
-    
   </div>
 );
 
-const LoginForm = ({ isRegistering, email, setEmail, password, setPassword, handleFormSubmit }) => (
+const LoginForm = ({
+  isRegistering,
+  email,
+  setEmail,
+  password,
+  setPassword,
+  name,
+  setName,
+  course,
+  setCourse,
+  percentile,
+  setPercentile,
+  marksheet,
+  setMarksheet,
+  handleFormSubmit,
+  loginType
+}) => (
   <div className="login-form">
+    {isRegistering && (
+      <>
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        {loginType === 'student' && (
+          <>
+            <input
+              type="text"
+              placeholder="Course"
+              value={course}
+              onChange={(e) => setCourse(e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Percentile"
+              value={percentile}
+              onChange={(e) => setPercentile(e.target.value)}
+            />
+            <input
+              type="file"
+              accept=".pdf, .jpg, .png"
+              onChange={(e) => setMarksheet(e.target.files[0])}
+            />
+          </>
+        )}
+      </>
+    )}
     <input
       type="email"
       placeholder="Email"
@@ -60,75 +106,122 @@ const LoginModal = () => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [course, setCourse] = useState('');
+  const [percentile, setPercentile] = useState('');
+  const [marksheet, setMarksheet] = useState(null);
   const navigate = useNavigate();
 
   const handleLoginTypeChange = (e) => setLoginType(e.target.value);
 
   const handleFormSubmit = async () => {
-    const userData = { email, password, loginType };
+    if (!email || !password || (isRegistering && (!name || (loginType === 'student' && (!course || !percentile))))) {
+      alert('Please fill in all required fields.');
+      return;
+    }
 
     if (isRegistering) {
-      await registerUser(userData);
-    }
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('password', password);
+      formData.append('loginType', loginType);
+      formData.append('course', course);
+      formData.append('percentile', parseInt(percentile, 10));
 
-    const logindata = await loginUser(userData);
-    if (logindata.success) {
-    if(logindata.user.type===loginType){
-      if (logindata.user.type==="college") {
-        navigate("/college-dashboard", { replace: true });
-      } 
-      else if (logindata.user.type === "admin") {
+      if (marksheet) {
+        formData.append('marksheet', marksheet);
+      }
 
-          navigate("/admin-dashboard", { replace: true });
-          }
-      else {
-        navigate("/dashboard", { replace: true });
-      }
-      }
-      else{
-      	alert('Login failed!');
+      try {
+        const response = await fetch('http://localhost:5000/api/register', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          alert('Registration successful!');
+          navigate('/'); // Redirect to login or home page
+        } else {
+          alert('Registration failed: ' + data.message);
+        }
+      } catch (error) {
+        console.error('Error during registration:', error);
+        alert('Registration failed. Please check your server logs.');
       }
     } else {
-      alert('Login failed!');
-    }
-  };
+      try {
+        const logindata = await loginUser({ email, password, loginType });
 
-  const registerUser = async (userData) => {
-    await fetch('http://localhost:5000/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
-    });
+        if (logindata.success) {
+          localStorage.setItem('user', JSON.stringify(logindata.user)); // Store user data in localStorage
+          switch (logindata.user.loginType) {
+            case 'college':
+              navigate('/college-dashboard', { replace: true });
+              break;
+            case 'admin':
+              navigate('/admin-dashboard', { replace: true });
+              break;
+            default:
+              navigate('/dashboard', { replace: true });
+          }
+        } else {
+          alert('Login failed! Invalid credentials.');
+        }
+      } catch (error) {
+        console.error('Error during login:', error);
+        alert('Login failed. Please check your server logs.');
+      }
+    }
   };
 
   const loginUser = async (userData) => {
-    const response = await fetch('http://localhost:5000/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
-    });
-    const data = await response.json();
-    return data;
+    try {
+      const response = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error during login:', error);
+      throw error;
+    }
   };
 
   return (
     <div className="login-modal">
       <h2>{isRegistering ? 'Register' : 'Login'}</h2>
       <LoginTypeSelector loginType={loginType} handleLoginTypeChange={handleLoginTypeChange} />
-      <LoginForm 
+      <LoginForm
         isRegistering={isRegistering}
         email={email}
         setEmail={setEmail}
         password={password}
         setPassword={setPassword}
+        name={name}
+        setName={setName}
+        course={course}
+        setCourse={setCourse}
+        percentile={percentile}
+        setPercentile={setPercentile}
+        marksheet={marksheet}
+        setMarksheet={setMarksheet}
         handleFormSubmit={handleFormSubmit}
+        loginType={loginType}
       />
-      <p onClick={() => setIsRegistering(!isRegistering)}>
-        {isRegistering ? 'Already have an account? Login' : 'No account? Register'}
-      </p>
+      <button onClick={() => setIsRegistering(!isRegistering)}>
+        {isRegistering ? 'Already have an account? Login' : 'Create an account'}
+      </button>
     </div>
   );
 };
 
 export default LoginModal;
-

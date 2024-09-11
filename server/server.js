@@ -1,259 +1,334 @@
-// backend/server.js
-const express = require('express');
-const path = require('path');
-const cors = require('cors');
-const fs = require('fs');
+import express from 'express';
+import cors from 'cors';
+import { MongoClient, ObjectId } from 'mongodb';
+import bodyParser from 'body-parser';
+import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Set up directory path
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 app.use(express.json());
-
-app.use((req, res, next) => {
-  res.setHeader('Content-Type', 'application/json');
-  next();
-});
 app.use(cors());
-fs.writeFileSync(path.join(__dirname, './data/user.json'), JSON.stringify('[]', null, 2), 'utf-8');
-const users = require('./users.json');
-//const boughtCourses = require('./data/boughtCourses.json');
+app.use(bodyParser.json());
+
+// Set up uploads directory
+const uploadsDir = path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// MongoDB connection string
+const uri = 'mongodb://0.0.0.0'; // Replace with your MongoDB connection string
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Declare collection variables
+let usersCollection;
+let filtersCollection;
+let coursesCollection;
+let boughtCoursesCollection;
 let cart = [];
 
-////login logic
-
-app.post('/api/register', (req, res) => {
-  const newUser = req.body;
-  users.push(newUser);
-  //fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
-  fs.writeFileSync('./users.json', JSON.stringify(users, null, 2), 'utf-8');
-  res.json({ success: true });
-});
-
-app.post('/api/login', (req, res) => {
-  const { email, password } = req.body;
-  const users = JSON.parse(fs.readFileSync('./users.json', 'utf-8'));
-  const user = users.find(u => u.email === email && u.password === password);
-  if (user) {
-    try {
-      fs.writeFileSync(path.join(__dirname, './data/user.json'), JSON.stringify(user, null, 2), 'utf-8');
-      res.json({ success: true, user });
-    } catch (error) {
-      console.error('Error writing to user.json:', error);
-      res.status(500).json({ success: false, message: 'Error saving user data' });
-    }
-  } else {
-    res.json({ success: false });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
   }
 });
 
-////login end
+const upload = multer({ storage: storage });
 
-app.get('/api/user', (req, res) => {
+// Connect to MongoDB
+async function connectToDB() {
   try {
-    const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
-    //console.log(user);
-    res.status(200).json(user);
+    await client.connect();
+    console.log('Connected to MongoDB!');
+    const db = client.db('mydb');
+
+    // Initialize collections
+    usersCollection = db.collection('users');
+    filtersCollection = db.collection('filters');
+    coursesCollection = db.collection('courses');
+    boughtCoursesCollection = db.collection('boughtCourses');
+
+    // Start the server after successful DB connection
+    app.listen(port, () => {
+      console.log(`Server running at http://localhost:${port}`);
+    });
   } catch (error) {
-    console.error('Error reading user.json:', error);
-    res.status(500).json({ success: false, message: 'Error reading user data' });
+    console.error('Error connecting to MongoDB:', error);
+    process.exit(1); // Exit if unable to connect to MongoDB
+  }
+}
+connectToDB();
+
+// Register
+app.post('/api/register', upload.single('marksheet'), async (req, res) => {
+  try {
+    const { name, email, password, loginType, course, percentile } = req.body;
+    const marksheet = req.file ? req.file.filename : null;
+    const percentileInt = parseInt(percentile, 10);
+    if (!name || !email || !password || !loginType) {
+      return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
+    if (loginType === 'student') {
+      if (!course || isNaN(percentileInt)) {
+        return res.status(400).json({ success: false, message: 'Missing or invalid course or percentile' });
+      }
+    }
+    const newUser = { name, email, password, loginType, course: loginType === 'student' ? course : null, percentile: loginType === 'student' ? percentileInt : null, marksheet };
+    await usersCollection.insertOne(newUser);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error in /api/register:', error); // Log the error
+    res.status(500).json({ success: false, message: error.message });
   }
 });
 
-app.get('/api/filters', (req, res) => {
-  let filters = JSON.parse(fs.readFileSync('./data/filters.json'));
-  res.status(200).json(filters);
+// Login
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'Email and password are required.' });
+    }
+    const user = await usersCollection.findOne({ email, password });
+    if (user) {
+      console.log('Logged-in user:', user); // Log user data
+      res.json({ success: true, user });
+    } else {
+      res.json({ success: false, message: 'Invalid email or password.' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
 
-app.get('/api/courses', (req, res) => {
-  const courses = JSON.parse(fs.readFileSync('./data/courses.json'));
-  const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
-  const { degree, branch, district } = req.query;
-  //console.log(degree);
-  let filteredCourses = courses.filter(course => course.status === 'verified');
-  filteredCourses = courses.filter(course => course.cutoff <= user.percentile);
-  console.log(user.percentile);
-  if(degree){
-   filteredCourses = filteredCourses.filter(course => course.title === degree);
-  }
-  if (branch) {
-    const branchArray = branch.split(',');
-    //console.log(branchArray);
-    filteredCourses = filteredCourses.filter(course => branchArray.includes(course.branch));
-  }
 
-  if (district) {
-  	const districtArray = district.split(',');
-    filteredCourses = filteredCourses.filter(course => districtArray.includes(course.district));
+// Get User
+app.get('/api/user', async (req, res) => {
+  try {
+    const user = await usersCollection.findOne(); // Adjust based on actual user identification method
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
-
-  res.status(200).json(filteredCourses);
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+// Get Courses
+app.get('/api/courses', async (req, res) => {
+  try {
+    const { degree, branch, district } = req.query;
+    const user = await usersCollection.findOne(); // Adjust based on actual user identification method
+    let filteredCourses = await coursesCollection.find({ status: 'verified' }).toArray();
+
+    filteredCourses = filteredCourses.filter(course => course.cutoff <= user.percentile);
+
+    if (degree) {
+      filteredCourses = filteredCourses.filter(course => course.title === degree);
+    }
+    if (branch) {
+      const branchArray = branch.split(',');
+      filteredCourses = filteredCourses.filter(course => branchArray.includes(course.branch));
+    }
+    if (district) {
+      const districtArray = district.split(',');
+      filteredCourses = filteredCourses.filter(course => districtArray.includes(course.district));
+    }
+
+    res.json(filteredCourses);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Add Course
+app.post('/api/add-course', async (req, res) => {
+  try {
+    const newCourse = req.body;
+    const user = await usersCollection.findOne(); // Adjust based on actual user identification method
+    newCourse.college = user.college;
+    newCourse.status = 'unverified';
+
+    const lastCourse = await coursesCollection.find().sort({ id: -1 }).limit(1).toArray();
+    newCourse.id = (lastCourse[0] ? lastCourse[0].id : 0) + 1;
+
+    await coursesCollection.insertOne(newCourse);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Cart operations
+app.post('/api/cart', async (req, res) => {
+  try {
+    const { course } = req.body;
+    if (!cart.find(item => item.id === course.id)) {
+      cart.push(course);
+    }
+    res.json(cart);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
 
 app.get('/api/cart', (req, res) => {
-  
-  res.status(200).json(cart);
-});
-
-app.get('/api/purchases', (req, res) => {
-  const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
-  const boughtCourses = JSON.parse(fs.readFileSync('./data/boughtCourses.json', 'utf-8'));
-  res.status(200).json(boughtCourses.filter(item => item.user.id === user.id));
-});
-
-
-app.get('/api/college-posts', (req, res) => {
-  const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
-  const postedCourses = JSON.parse(fs.readFileSync('./data/courses.json', 'utf-8'));
-  res.status(200).json(postedCourses.filter(item => item.college === user.college));
-});
-
-
-app.get('/api/college-courses-sold', (req, res) => {
-  const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
-  const boughtCourses = JSON.parse(fs.readFileSync('./data/boughtCourses.json', 'utf-8'));
-  res.status(200).json(boughtCourses.filter(item => item.course.college === user.college));
-});
-
-app.post('/api/college-posts', (req, res) => {
-  const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
-  const postedCourses = JSON.parse(fs.readFileSync('./data/courses.json', 'utf-8'));
-  const { updatedCourses } = req.body;
-  //console.log("durr durr*******");
-  //console.log(updatedCourses);
-  //console.log("durr durr*******");
-  if (updatedCourses) {
-  let final = [];
-    try {
-      for (var course of postedCourses)
-      //console.log(course); 
-		{
-		  if(course.college !== user.college){
-		  	final.push(course);
-		  }
-		  else{
-		  	if(updatedCourses.find(item => item.id === course.id)){
-		  		final.push(course);
-		  	}
-		  	else{
-		  		console.log(course);
-		  	}
-		  }
-		}
-      fs.writeFileSync(path.join(__dirname, './data/courses.json'), JSON.stringify(final, null, 2), 'utf-8');
-      res.json({ success: true, user });
-    } catch (error) {
-      console.error('Error writing to user.json:', error);
-      res.status(500).json({ success: false, message: 'Error saving user data' });
-    }
-  } else {
-    res.json({ success: false });
+  try {
+    res.json(cart);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
-
-});
-
-app.post('/api/cart', (req, res) => {
-  //console.log(res.json(cart));
-  const { course } = req.body;
-  //if(cart.length!==0){
-  if (!cart.find(item => item.id === course.id)) {
-    cart.push(course);
-  }
-  //res.status(200).json(cart);
-  //}
-  res.status(200).json(cart);
 });
 
 app.delete('/api/cart', (req, res) => {
-  const { courseId } = req.body;  
-  cart = cart.filter(item => item.id !== courseId);
-  res.status(200).json(cart);
+  try {
+    const { courseId } = req.body;
+    cart = cart.filter(item => item.id !== courseId);
+    res.json(cart);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
 
-app.delete('/api/logout', (req, res) => {
-  cart = [];
-  res.status(200).json(cart);
+app.post('/api/purchasesp', async (req, res) => {
+  const { user, courses, invoice } = req.body;
+  console.log("Received data:", { user, courses, invoice });
+  if (!user || !courses || !invoice) {
+    console.error('Missing required fields:', { user, courses, invoice });
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+  if (!user._id) {
+    console.error('User ID is missing');
+    return res.status(400).json({ error: 'User ID is required' });
+  }
+  try {
+    const boughtCourses = courses.map(course => ({
+      user,
+      course,  
+      invoice,
+    }));
+    await boughtCoursesCollection.insertMany(boughtCourses);
+    await Promise.all(courses.map(course =>
+      coursesCollection.updateOne(
+        { _id: course._id },
+        { $inc: { count: 1 } }
+      )
+    ));
+    res.status(200).json({ message: 'Purchase recorded successfully' });
+  } catch (error) {
+    console.error('Error recording purchase:', error);
+    res.status(500).json({ error: 'Error recording purchase' });
+  }
 });
 
-
-app.post('/api/purchasesp', (req, res) => {
-  const { invoice } = req.body;
-  const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
-  let boughtCourses  = JSON.parse(fs.readFileSync('./data/boughtCourses.json', 'utf-8'));
-  let courses = JSON.parse(fs.readFileSync('./data/courses.json', 'utf-8'));
-  cart.forEach(item => {
-	const row = {'user': user, 'course': item, 'invoice': invoice};
-	boughtCourses.push(row);	
-	//console.log(row);
-	courses.forEach(upd =>{
-	  if(upd.id===item.id){
-	  	upd.count+=1;
-	  }
-	 });
-  });
-  fs.writeFileSync('./data/courses.json', JSON.stringify(courses, null, 2), 'utf-8');
-  fs.writeFileSync('./data/boughtCourses.json', JSON.stringify(boughtCourses, null, 2), 'utf-8');
-  while(cart.length > 0) {
-    cart.pop();
-   }
-  res.status(200);
+// Get Filters
+app.get('/api/filters', async (req, res) => {
+  try {
+    const filters = await filtersCollection.findOne(); // Adjust based on your filter structure
+    res.json(filters);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
 
-
-app.post('/api/add-course', (req, res) => {
-  const newCourse = req.body;
-  const user = JSON.parse(fs.readFileSync('./data/user.json', 'utf-8'));
-  newCourse.college = user.college;
-  newCourse.status= 'unverified';
-  let courses = JSON.parse(fs.readFileSync('./data/courses.json', 'utf-8'));
-  //console.log(newCourse);
-  newCourse.id = courses[courses.length-1].id + 1;
-  //console.log(newCourse);
-  //console.log('executed');
-  if(!courses.find(item => item === newCourse)){
-   console.log(newCourse);
-   courses.push(newCourse);
-   fs.writeFileSync('./data/courses.json', JSON.stringify(courses, null, 2));
-   res.status(200).json({ success: true });
-   }
+// Get Purchased Courses for User
+app.get('/api/purchases', async (req, res) => {
+  try {
+    const user = await usersCollection.findOne(); // Adjust based on actual user identification method
+    const boughtCourses = await boughtCoursesCollection.find({ user: user._id }).toArray();
+    res.json(boughtCourses);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
 
-app.get('/api/courses-admin', (req, res) => {
-	try{
-   		 const data = fs.readFileSync('./data/courses.json', 'utf8');
-   		 res.status(200).send(JSON.parse(data));
-        }
-    catch (error){
-        res.status(500).send('Error reading courses file');
+// Get College Posts
+app.get('/api/college-posts', async (req, res) => {
+  try {
+    const user = await usersCollection.findOne(); // Adjust based on actual user identification method
+    const postedCourses = await coursesCollection.find({ college: user.college }).toArray();
+    res.json(postedCourses);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Get College Courses Sold
+app.get('/api/college-courses-sold', async (req, res) => {
+  try {
+    const user = await usersCollection.findOne(); // Adjust based on actual user identification method
+    const boughtCourses = await boughtCoursesCollection.find({ 'course.college': user.college }).toArray();
+    res.json(boughtCourses);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Update Course Status
+app.post('/api/courses-admin', async (req, res) => {
+  try {
+    const updatedCourses = req.body;
+    const branches = [...new Set(updatedCourses.map(course => course.branch))];
+    const districts = [...new Set(updatedCourses.map(course => course.district))];
+
+    await coursesCollection.deleteMany({}); // Clear existing courses
+    await coursesCollection.insertMany(updatedCourses);
+
+    const filters = {
+      branches: branches.sort(),
+      districts: districts.sort()
+    };
+    await filtersCollection.updateOne({}, { $set: filters }, { upsert: true });
+
+    res.status(200).send('Courses updated successfully');
+  } catch (error) {
+    res.status(500).send('Error updating courses: ' + error.message);
+  }
+});
+
+// Get All Courses (for admin)
+app.get('/api/courses-admin', async (req, res) => {
+  try {
+    const courses = await coursesCollection.find().toArray();
+    res.json(courses);
+  } catch (error) {
+    res.status(500).send('Error fetching courses: ' + error.message);
+  }
+});
+
+// Get Purchases for Admin
+app.get('/api/purchases-admin', async (req, res) => {
+  try {
+    const boughtCourses = await boughtCoursesCollection.find().toArray();
+    res.json(boughtCourses);
+  } catch (error) {
+    res.status(500).send('Error fetching purchases: ' + error.message);
+  }
+});
+
+app.get('/api/students', async (req, res) => {
+  try {
+    const students = await usersCollection.find({ loginType: 'student' }).toArray();
+    res.json(students);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+app.delete('/api/students/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await usersCollection.deleteOne({ _id: new ObjectId(id) });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ success: false, message: 'Student not found' });
     }
-    });
-
-// API to update course status
-app.post('/api/courses-admin', (req, res) => {
-    try{
-    	const updatedCourses = req.body;
-		//let courses = JSON.parse(fs.readFileSync('./data/courses.json', 'utf8'));
-		//courses = courses.map(course => course.id === updatedCourse.id ? updatedCourse : course);
-		const branches = [...new Set(updatedCourses.map(course => course.branch))];
-		const districts = [...new Set(updatedCourses.map(course => course.district))];
-		fs.writeFileSync('./data/courses.json', JSON.stringify(updatedCourses, null, 2), 'utf8');
-		res.status(200).send('Course updated successfully');
-		
-		const filters = {
-        branches: branches.sort(),
-        districts: districts.sort()
-    	};
-    	fs.writeFileSync('./data/filters.json', JSON.stringify(filters, null, 2), 'utf8');
-    
-    } catch (error){
-    	res.status(500).send('Error reading courses file '+error);
-    }
-    });
-    
-    
-app.get('/api/purchases-admin', (req, res) => {
-  const boughtCourses = JSON.parse(fs.readFileSync('./data/boughtCourses.json', 'utf-8'));
-  res.status(200).json(boughtCourses);
+    res.json({ success: true, message: 'Student deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
