@@ -217,9 +217,17 @@ const LoginModal = () => {
         handleFormSubmit={handleFormSubmit}
         loginType={loginType}
       />
-      <button onClick={() => setIsRegistering(!isRegistering)}>
-        {isRegistering ? 'Already have an account? Login' : 'Create an account'}
-      </button>
+      <a
+  href="#"
+  onClick={(e) => {
+    e.preventDefault(); 
+    setIsRegistering(!isRegistering); 
+  }}
+  style={{ cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }} 
+>
+  {isRegistering ? 'Already have an account? Login' : 'Are you new? Register'}
+</a>
+
     </div>
   );
 };

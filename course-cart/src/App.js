@@ -3,14 +3,11 @@ import { Link } from "react-router-dom";
 import UserInfo from './components/UserInfo';
 import Filters from './components/Filters';
 import CourseCard from './components/CourseCard';
-import BillingPage from './components/BillingPage';
 import FixedBottom from './components/FixedBottom';
-//import LoginModal from './components/LoginModal';
 import './App.css';
 
 const App = () => {
-  
-  const [user, setUser] = useState({'id': '', 'name': '', 'email': '', 'course': '','password': '', 'type': ''});
+  const [user, setUser] = useState({ id: '', name: '', email: '', course: '', password: '', type: '' });
   const [courses, setCourses] = useState([]);
   const [filters, setFilters] = useState({ branches: [], districts: [] });
   const [selectedBranches, setSelectedBranches] = useState([]);
@@ -18,90 +15,87 @@ const App = () => {
   const [cart, setCart] = useState([]);
   const [purchases, setPurchases] = useState([]);
 
+  // Fetch user data first
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/user');
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
         const data = await response.json();
-        console.log(data);
         setUser(data);
       } catch (error) {
         console.error('Error fetching user:', error);
       }
     };
 
-    const fetchFilters = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/filters');
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+    fetchUser();
+  }, []);
+
+  // Fetch purchases after user is loaded
+  useEffect(() => {
+    if (user.id) {
+      const fetchPurchases = async () => {
+        try {
+          const response = await fetch(`http://localhost:5000/api/purchases?userId=${user.id}`);
+          const data = await response.json();
+          setPurchases(data);
+        } catch (error) {
+          console.error('Error fetching purchases:', error);
         }
-        const data = await response.json();
-        setFilters(data);
-      } catch (error) {
-        console.error('Error fetching filters:', error);
-      }
-    };
-    
-    const fetchCoursesi = async (usercourse) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/courses?degree=${usercourse}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data = await response.json();
-      setCourses(data);
-    } catch (error) {
-      console.error('Error fetching courses:', error);
+      };
+
+      fetchPurchases();
     }
-  };
-  
-   const fetchCart = async () => {
+  }, [user.id]);
+
+  // Fetch filters and courses when user.course is available
+  useEffect(() => {
+    if (user.course) {
+      const fetchFilters = async () => {
+        try {
+          const response = await fetch('http://localhost:5000/api/filters');
+          const data = await response.json();
+          setFilters(data);
+        } catch (error) {
+          console.error('Error fetching filters:', error);
+        }
+      };
+
+      const fetchCourses = async () => {
+        try {
+          const response = await fetch(`http://localhost:5000/api/courses?degree=${user.course}`);
+          const data = await response.json();
+          setCourses(data);
+        } catch (error) {
+          console.error('Error fetching courses:', error);
+        }
+      };
+
+      fetchFilters();
+      fetchCourses();
+    }
+  }, [user.course]);
+
+  // Fetch cart items
+  useEffect(() => {
+    const fetchCart = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/cart');
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
         const data = await response.json();
         setCart(data);
       } catch (error) {
         console.error('Error fetching cart:', error);
       }
     };
-    
-    const fetchPurchases = async (userid) => {
-      try {
-        const response = await fetch('http://localhost:5000/api/purchases');
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setPurchases(data);
-      } catch (error) {
-        console.error('Error fetching purcchases:', error);
-      }
-    };
 
-    fetchUser();
-    fetchFilters();
-    fetchCoursesi(user.course);
     fetchCart();
-    fetchPurchases(user.id);
-    
-  }, [user.course, user.id]);
-  
-   const fetchCourses = async (branches, districts, usercourse) => {
+  }, []);
+
+  // Fetch filtered courses
+  const fetchCourses = async (branches, districts, usercourse) => {
     try {
       const branchQuery = branches.join(',');
       const distQuery = districts.join(',');
-      const response = await fetch(`http://localhost:5000/api/courses?degree=${user.course}&branch=${branchQuery}&district=${distQuery}`);
-      //console.log(branchQuery);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+      const response = await fetch(`http://localhost:5000/api/courses?degree=${usercourse}&branch=${branchQuery}&district=${distQuery}`);
       const data = await response.json();
       setCourses(data);
     } catch (error) {
@@ -109,10 +103,10 @@ const App = () => {
     }
   };
 
-  const handleApplyFilters = (branches, districts, degree) => {
+  const handleApplyFilters = (branches, districts) => {
     setSelectedBranches(branches);
     setSelectedDistricts(districts);
-    fetchCourses(branches, districts, degree);
+    fetchCourses(branches, districts, user.course);
   };
 
   const handleResetFilters = () => {
@@ -120,7 +114,7 @@ const App = () => {
     setSelectedDistricts([]);
     fetchCourses([], [], user.course);
   };
-  
+
   const handleAddToCart = async (course) => {
     try {
       const response = await fetch('http://localhost:5000/api/cart', {
@@ -136,7 +130,7 @@ const App = () => {
       console.error('Error adding to cart:', error);
     }
   };
-  
+
   const handleRemoveFromCart = async (courseId) => {
     try {
       const response = await fetch('http://localhost:5000/api/cart', {
@@ -153,41 +147,26 @@ const App = () => {
     }
   };
 
-  const handleBuyNow = () => {
-    alert('Purchase successful!');
-    setCart([]); // Clear the cart after purchase
+  const handleLogout = () => {
+    localStorage.removeItem('user');  
+    setCart([]); 
+    window.location.href = '/';  
   };
   
-  const handleLogout = async () => {
-    const response = await fetch('http://localhost:5000/api/logout', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}),
-      });
-      const updatedCart = await response.json();
-      setCart(updatedCart); 
-  };
-
-  if (!user) {
-    return <div>Loading...</div>;
-  }
-
+  
   return (
     <div className="app">
-    <Link to="/">
-      <button className="logout" onClick={handleLogout}>
-        logout
-      </button></Link>	
+      <Link to="/">
+        <button className="logout" onClick={handleLogout}>Logout</button>
+      </Link>
+
       <div className="row user-info">
-        <UserInfo user={user} 
-        degree={user.course}
-        />
+        <UserInfo user={user} degree={user.course} />
       </div>
+
       <div className="row main-content">
         <div className="filters">
-        <h3 id='fixedheading'>Apply Filters</h3>
+          <h3 id='fixedheading'>Apply Filters</h3>
           <Filters
             branches={filters.branches}
             districts={filters.districts}
@@ -196,28 +175,26 @@ const App = () => {
             onResetFilters={handleResetFilters}
           />
         </div>
-        
+
         <div className="courses">
-          {courses.map((course, index) => (
+          {courses.map((course) => (
             <CourseCard
-              key={index}
+              key={course.id}
               course={course}
               isInCart={cart.some(item => item.id === course.id)}
-              isInPurchases={purchases.some(item => item.user.id === user.id && item.course.id === course.id)}
-              onBuyNow={() => console.log('Buying:', course)}
+              isInPurchases={purchases.some(item => item.courseId === course.id)}
               onAddToCart={() => handleAddToCart(course)}
               onRemoveFromCart={() => handleRemoveFromCart(course.id)}
             />
           ))}
         </div>
-        
       </div>
+
       <div className="fixed-bottom">
-        <FixedBottom cartCount={cart.length}/>
+        <FixedBottom cartCount={cart.length} />
       </div>
-   </div> 
+    </div>
   );
 };
 
 export default App;
-

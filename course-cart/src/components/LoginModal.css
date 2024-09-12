@@ -1,83 +1,111 @@
-/* Container for the entire modal */
+body {
+  background-color: #fff3e0; /* Light orange background */
+}
+
 .login-modal {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Modal title (Login/Register) */
-  .login-modal h2 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    color: #333;
-    font-weight: bold;
-  }
-  
-  /* Container for login type selector */
-  .login-type {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 1.5rem;
-  }
-  
-  /* Login type radio buttons */
-  .login-type label {
-    display: flex;
-    align-items: center;
-    font-size: 1rem;
-    color: #333;
-  }
-  
-  .login-type input[type="radio"] {
-    margin-right: 0.5rem;
-  }
-  
-  /* Login form inputs */
-  .login-form input {
-    width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-  }
-  
-  /* Submit button (Login/Register) */
-  .login-form button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .login-form button:hover {
-    background-color: #45a049;
-  }
-  
-  /* Switch between login and register text */
-  .login-modal p {
-    margin-top: 1rem;
-    font-size: 1rem;
-    color: #007BFF;
-    cursor: pointer;
-    text-decoration: underline;
-  }
-  
-  .login-modal p:hover {
-    color: #0056b3;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #ffffff; /* White background for the modal */
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  position: relative;
+  transform: translateY(40px); /* Lowers the modal slightly */
+}
+
+/* Modal title (Login/Register) */
+.login-modal h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Container for login type selector (added margin-bottom for spacing) */
+.login-type {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 2rem; /* Adds more gap between radio buttons and text inputs */
+}
+
+/* Login type radio buttons */
+.login-type label {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #333;
+}
+
+.login-type input[type="radio"] {
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+/* Login form inputs */
+.login-form input {
+  width: calc(100% - 20px); /* Ensures the input field aligns equally on both sides */
+  padding: 0.75rem;
+  margin-bottom: 1.5rem; /* Increased margin-bottom for more spacing between inputs */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #fff;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease;
+}
+
+.login-form input:focus {
+  border-color: #ff9800;
+  outline: none;
+}
+
+/* Submit button (Login/Register) */
+.login-form button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #ff9800; /* Orange color */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-form button:hover {
+  background-color: #e68a00;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Switch between login and register text */
+.login-modal p {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #007BFF;
+  cursor: pointer;
+  text-decoration: underline;
+  text-align: center;
+}
+
+.login-modal p:hover {
+  color: #0056b3;
+}
+
+/* Extra improvements */
+.login-modal h2::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 4px;
+  background-color: #10095b; /* Orange underline */
+  margin: 0.5rem auto;
+  border-radius: 2px;
+}

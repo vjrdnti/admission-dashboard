@@ -38,10 +38,15 @@ const App = () => {
     return <div>Loading...</div>;
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('user');  
+    setCart([]); 
+    window.location.href = '/';  
+  };
   return (
     <div className="app">
     <Link to="/">
-      <button className="logout">
+      <button className="logout" onClick={handleLogout}>
         logout
       </button></Link>	
       <div className="row user-info">

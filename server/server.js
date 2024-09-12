@@ -17,14 +17,12 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
 
-// Set up uploads directory
+
 const uploadsDir = path.join(__dirname, 'uploads');
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// MongoDB connection string
-const uri = 'mongodb://0.0.0.0'; // Replace with your MongoDB connection string
+const uri = 'mongodb://0.0.0.0'; 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// Declare collection variables
 let usersCollection;
 let filtersCollection;
 let coursesCollection;
@@ -42,31 +40,27 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Connect to MongoDB
 async function connectToDB() {
   try {
     await client.connect();
     console.log('Connected to MongoDB!');
     const db = client.db('mydb');
 
-    // Initialize collections
     usersCollection = db.collection('users');
     filtersCollection = db.collection('filters');
     coursesCollection = db.collection('courses');
     boughtCoursesCollection = db.collection('boughtCourses');
 
-    // Start the server after successful DB connection
     app.listen(port, () => {
       console.log(`Server running at http://localhost:${port}`);
     });
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
-    process.exit(1); // Exit if unable to connect to MongoDB
+    process.exit(1); 
   }
 }
 connectToDB();
 
-// Register
 app.post('/api/register', upload.single('marksheet'), async (req, res) => {
   try {
     const { name, email, password, loginType, course, percentile } = req.body;
@@ -104,6 +98,29 @@ app.post('/api/login', async (req, res) => {
       res.json({ success: false, message: 'Invalid email or password.' });
     }
   } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+app.delete('/api/logout', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ success: false, message: 'User ID is required' });
+    }
+    console.log('User ID:', userId); 
+    const result = await cartsCollection.updateOne(
+      { userId: userId }, 
+      { $set: { items: [] } } 
+    );
+
+    if (result.modifiedCount === 1) {
+      res.status(200).json({ success: true, message: 'Logout successful, cart cleared' });
+    } else {
+      res.status(404).json({ success: false, message: 'Cart not found for user' });
+    }
+  } catch (error) {
+    console.error('Error during logout:', error); // Log the exact error for debugging
     res.status(500).json({ success: false, message: error.message });
   }
 });
@@ -211,6 +228,7 @@ app.post('/api/purchasesp', async (req, res) => {
       user,
       course,  
       invoice,
+      purchaseDate: new Date()
     }));
     await boughtCoursesCollection.insertMany(boughtCourses);
     await Promise.all(courses.map(course =>

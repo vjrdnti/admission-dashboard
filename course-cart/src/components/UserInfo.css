@@ -1,0 +1,69 @@
+/* Styling for the main container */
+.user-info-container {
+    margin: 50px auto;
+    background-color: #f0bc68; /* Light orange background */
+    border-radius: 12px;
+    padding: 20px; /* Add padding to ensure content is not cramped */
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Heading style */
+.user-info-container h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    color: #333; /* Darker text color for better readability */
+}
+
+/* Paragraph styles for user details */
+.user-info-container p {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+    line-height: 1.5;
+    color: #333; /* Darker text color for better readability */
+}
+
+/* Purchased courses header */
+.purchases h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #007bff; /* Blue color for the header */
+    text-align: center;
+}
+
+/* Individual purchase items */
+.purchase-item {
+    background-color: #fff; /* White background for better contrast */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Heading for individual purchase items */
+.purchase-item h4 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: #333; /* Darker text color for better readability */
+}
+
+/* Button style for viewing or managing purchases */
+.purchase-item button {
+    padding: 8px 12px;
+    font-size: 1rem;
+    background-color: #007bff; /* Blue color for buttons */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    color: #fff; /* White text color for buttons */
+}
+
+.purchase-item button:hover {
+    background-color: #0056b3;
+}
