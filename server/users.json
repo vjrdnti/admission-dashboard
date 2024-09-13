@@ -39,5 +39,14 @@
     "email": "admin@vm.com",
     "password": "pw123",
     "type": "admin"
+  },
+  {
+    "name": "aryan",
+    "email": "sarode@hmail.com",
+    "password": "pw123",
+    "type": "student",
+    "course": "Btech",
+    "percentile": 93,
+    "id": 23
   }
 ]

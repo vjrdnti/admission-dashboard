@@ -4,7 +4,7 @@ import '../billing.css';
 
 const BillingPage = () => {
   const [cart, setCart] = useState([]);
-  const totalCost = cart.reduce((total, course) => total + course.cost, 0);
+  const totalCost = cart.reduce((total, course) => total + parseFloat(course.cost), 0);
   const platformFee = 50;
   const gst = (12/100)*totalCost;
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -85,7 +85,7 @@ const BillingPage = () => {
         )}
       </div>
       <div className="billing-summary">
-        <h3 className="total-cost">Total: {totalCost+platformFee+gst} Rs</h3>
+        {totalCost>0?<h3 className="total-cost">Total: {totalCost+platformFee+gst} Rs</h3>: <h3 className="total-cost">Go back to course page</h3>}
         <button className="breakdown-btn" onClick={handleBreakdown} disabled={cart.length === 0}>
           Detailed Bill
         </button>

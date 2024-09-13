@@ -177,7 +177,7 @@
     "description": "Description14",
     "cost": 1200,
     "intake": 60,
-    "count": 0,
+    "count": 1,
     "cutoff": 92,
     "status": "verified"
   },
@@ -258,5 +258,18 @@
     "college": "MIT",
     "status": "verified",
     "id": 20
+  },
+  {
+    "title": "Btech",
+    "description": "Description 101",
+    "branch": "CSBS",
+    "district": "Nagpur",
+    "cost": "120",
+    "intake": "45",
+    "cutoff": "90",
+    "count": 1,
+    "college": "MIT",
+    "status": "verified",
+    "id": 21
   }
 ]

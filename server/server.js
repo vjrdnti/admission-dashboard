@@ -1,3 +1,9 @@
+//import { MongoClient, ObjectId } from 'mongodb';
+//import bodyParser from 'body-parser';
+//import multer from 'multer';
+//import path from 'path';
+//import { fileURLToPath } from 'url';
+
 // backend/server.js
 const express = require('express');
 const path = require('path');
@@ -7,6 +13,7 @@ const app = express();
 const port = 5000;
 
 app.use(express.json());
+//app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'application/json');
@@ -15,13 +22,20 @@ app.use((req, res, next) => {
 app.use(cors());
 fs.writeFileSync(path.join(__dirname, './data/user.json'), JSON.stringify('[]', null, 2), 'utf-8');
 const users = require('./users.json');
+let len = users.length;
 //const boughtCourses = require('./data/boughtCourses.json');
 let cart = [];
 
 ////login logic
 
 app.post('/api/register', (req, res) => {
-  const newUser = req.body;
+  const users = JSON.parse(fs.readFileSync('./users.json', 'utf-8'));
+  let newUser = {};
+  newUser = req.body;
+  //console.log('new user');
+  //console.log(newUser);
+  len = len+1;
+  newUser.id = len;
   users.push(newUser);
   //fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
   fs.writeFileSync('./users.json', JSON.stringify(users, null, 2), 'utf-8');
@@ -256,4 +270,31 @@ app.post('/api/courses-admin', (req, res) => {
 app.get('/api/purchases-admin', (req, res) => {
   const boughtCourses = JSON.parse(fs.readFileSync('./data/boughtCourses.json', 'utf-8'));
   res.status(200).json(boughtCourses);
+});
+
+app.get('/api/students', async (req, res) => {
+  try {
+    let students = JSON.parse(fs.readFileSync('./users.json', 'utf-8'));
+    students = students.filter(item => item.type === "student");
+    console.log(students);
+    res.json(students);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+app.delete('/api/students/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    let users = JSON.parse(fs.readFileSync('./users.json', 'utf-8'));
+    users = students.filter(item => item.id !== id);
+    fs.writeFileSync('./data/users.json', JSON.stringify(users, null, 2));
+    if (users.filter(item => item.id === id).length === 0) {
+      return res.status(404).json({ success: false, message: 'Student not found' });
+    }
+    res.json({ success: true, message: 'Student deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 });

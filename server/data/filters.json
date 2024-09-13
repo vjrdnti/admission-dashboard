@@ -4,6 +4,7 @@
     "BIOTECH",
     "CHEMICAL",
     "CIVIL",
+    "CSBS",
     "CSE",
     "Cybersecurity",
     "ECE",
@@ -19,6 +20,7 @@
     "District D",
     "District E",
     "Mumbai",
+    "Nagpur",
     "Pune"
   ]
 }

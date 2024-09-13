@@ -34,6 +34,19 @@ const App = () => {
     
   }, [] );
 
+  const handleLogout = async () => {
+    const response = await fetch('http://localhost:5000/api/logout', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      });
+      const updatedCart = await response.json();
+      setCart(updatedCart); 
+  };
+
+
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -41,7 +54,7 @@ const App = () => {
   return (
     <div className="app">
     <Link to="/">
-      <button className="logout">
+      <button className="logout" onClick={handleLogout}>
         logout
       </button></Link>	
       <div className="row user-info">

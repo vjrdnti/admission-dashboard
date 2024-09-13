@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import './app3.css';
 import CourseList from './components/CourseList';
 import UserInfo from './components/purchased-admin';
+import VerificationButton from './components/VerificationButton';
 
 const AdminDashboard = () => {
   const [user, setUser] = useState({'id': '', 'name': '', 'email': '', 'password': '', 'type': ''});
@@ -42,9 +43,13 @@ const AdminDashboard = () => {
   }, [] );
   
   
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+    if(!user){
+  	return <div>no user</div>;
+  	console.log('NO USER AAAAAAAH');
+	}
+	if(user.type !== "admin"){
+	  return <div>{user.type}</div>;
+	}
 
   return (
     <div className="app">
@@ -62,6 +67,11 @@ const AdminDashboard = () => {
             <div className="right-column">
                 <CourseList status='verified'/>
             </div>
+           <div className="verification-container">
+          <Link to="/students">
+            <VerificationButton />
+          </Link>
+        </div>
         </div>
    </div> 
   );
