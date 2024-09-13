@@ -1,9 +1,7 @@
 {
-  "id": "1",
-  "name": "Tripathi",
-  "email": "tripathi@hmail.com",
-  "course": "Btech",
+  "id": "0",
+  "name": "admin",
+  "email": "admin@vm.com",
   "password": "pw123",
-  "type": "student",
-  "percentile": 96
+  "type": "admin"
 }

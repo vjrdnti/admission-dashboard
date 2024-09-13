@@ -119,8 +119,8 @@ handleFormSubmit
     <button onClick={handleFormSubmit}>
       {isRegistering ? 'Register' : 'Login'}
     </button>:
-    <button onClick={handleFormSubmit} disabled>
-      Register
+    <button onClick={handleFormSubmit}>
+      login
     </button>
     }
   </div>
@@ -142,7 +142,10 @@ const LoginModal = () => {
   const handleLoginTypeChange = (e) => setType(e.target.value);
 
   const handleFormSubmit = async () => {
-    if (!email || !password || (isRegistering && (!name || (type === 'student' && (!course || !percentile)))) || (isRegistering && (!name || (type === 'college' && (!college))))) {
+  	if( type=== 'admin' && isRegistering===true){
+  	setIsRegistering(false);
+  	}
+    if (!email || !password || (isRegistering!==false && (!name || (type === 'student' && (!course || !percentile)))) || (isRegistering && (!name || (type === 'college' && (!college))))) {
       alert('Please fill in all required fields.');
       return;
     }
