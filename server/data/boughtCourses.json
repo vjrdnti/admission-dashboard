@@ -98,5 +98,106 @@
       "status": "verified"
     },
     "invoice": "paid 1394 for this course  on XX/XX/XX"
+  },
+  {
+    "user": {
+      "id": "1",
+      "name": "Tripathi",
+      "email": "tripathi@hmail.com",
+      "course": "Btech",
+      "password": "pw123",
+      "type": "student",
+      "percentile": 96
+    },
+    "course": {
+      "id": 1,
+      "title": "Btech",
+      "branch": "ECE",
+      "college": "MIT",
+      "district": "District A",
+      "description": "Description1",
+      "cost": 1200,
+      "intake": 60,
+      "count": 0,
+      "cutoff": 92,
+      "status": "verified"
+    },
+    "invoice": "paid 1394 for this course  on XX/XX/XX"
+  },
+  {
+    "user": {
+      "id": "2",
+      "name": "Wadekar",
+      "email": "wadekar@hmail.com",
+      "course": "Btech",
+      "password": "pw123",
+      "type": "student",
+      "percentile": 91
+    },
+    "course": {
+      "id": 2,
+      "title": "Btech",
+      "branch": "CIVIL",
+      "college": "MIT",
+      "district": "District B",
+      "description": "Description2",
+      "cost": 1200,
+      "intake": 60,
+      "count": 1,
+      "cutoff": 91,
+      "status": "verified"
+    },
+    "invoice": "paid 1394 for this course  on XX/XX/XX"
+  },
+  {
+    "user": {
+      "name": "Siddharth",
+      "email": "trump@hmail.com",
+      "password": "pw123",
+      "type": "student",
+      "course": "Mtech",
+      "percentile": 98,
+      "marksheet": {},
+      "id": 8
+    },
+    "course": {
+      "id": 7,
+      "title": "Mtech",
+      "branch": "AI&DS",
+      "college": "MIT",
+      "district": "District C",
+      "description": "Description7",
+      "cost": 1200,
+      "intake": 60,
+      "count": 0,
+      "cutoff": 90,
+      "status": "unverified"
+    },
+    "invoice": "paid 1394 for this course  on XX/XX/XX"
+  },
+  {
+    "user": {
+      "id": "1",
+      "name": "Tripathi",
+      "email": "tripathi@hmail.com",
+      "course": "Btech",
+      "password": "pw123",
+      "type": "student",
+      "percentile": 96
+    },
+    "course": {
+      "id": 12,
+      "title": "Btech",
+      "branch": "MECHANICAL",
+      "college": "VIT",
+      "district": "District C",
+      "description": "Description12",
+      "cost": 1200,
+      "intake": 60,
+      "count": 0,
+      "cutoff": 90,
+      "status": "verified"
+    },
+    "invoice": "paid 1394 for this course  on XX/XX/XX"
   }
 ]

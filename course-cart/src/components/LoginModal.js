@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import './LoginModal.css';
+import './LoginModal.css';
 
 const LoginTypeSelector = ({ type, handleLoginTypeChange }) => (
   <div className="login-type">
@@ -113,8 +113,7 @@ handleFormSubmit
       type="password"
       placeholder="Password"
       value={password}
-      onChange={(e) => setPassword(e.target.value)}
-    required/>
+      onChange={(e) => setPassword(e.target.value)}/>
     {type!=='admin'?
     <button onClick={handleFormSubmit}>
       {isRegistering ? 'Register' : 'Login'}

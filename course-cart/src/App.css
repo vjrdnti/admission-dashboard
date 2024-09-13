@@ -3,9 +3,9 @@
 .app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh; /* Ensures full height for scrolling */
   box-sizing: border-box;
-  overflow-y: hidden;
+  background-color: #fff3e0; /* Light orange background */
 }
 
 .row {
@@ -14,25 +14,28 @@
 
 .logout {
   position: fixed;
-  top: 1px;
-  right: 2px;
-  padding: 10px 15px;
+  top: 10px;
+  right: 20px;
+  padding: 10px 20px;
   background-color: #f44336;
   color: #fff;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .row.user-info {
   flex: 1;
   max-height: 240px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5f5f5;
+  background-color: #ffecb3; /* Lighter shade for better contrast */
   border-radius: 8px;
-  padding: 2px;
+  padding: 20px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .row.main-content {
@@ -40,53 +43,41 @@
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  overflow-y: auto;
 }
 
-
 .filters {
-  position: auto;
-  display: wrap;
-  width: 200px;
+  position: relative;
+  width: 220px;
   padding-right: 12px;
   margin-right: 10px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 }
 
 .courses {
   display: flex;
-  flex-direction: row;
-  position: absolute;
-  right: 0;
-  left: 270px;
-  gap: 10px; /* Optional: Adds space between the cards */
-  overflow-y: auto;
-  overflow-x: auto;
+  flex-wrap: wrap;
+  flex: 1;
+  gap: 20px;
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+  padding-left: 20px;
 }
 
 .course-card {
   display: flex;
+  flex-direction: column;
   border: 1px solid #ddd;
   padding: 20px;
   margin-bottom: 10px;
-  width: 195px; /* Adjust width for three cards per row, considering gap */
+  width: 250px; /* Adjusted width */
   height: 400px;
   box-sizing: border-box;
   border-radius: 8px;
   background-color: #fff;
-  box-shadow: 0px 0px 5px grey;
-  overflow-y: auto;
-  overflow-x: auto;
-}
-
-.filters {
-  position: Auto;
-  border: 1px solid #ddd;
-  padding: 20px;
-  margin-bottom: 15px;
-  display: wrap;
-  border-radius: 8px;
-  background-color: white;
-  box-shadow: 0px 0px 5px grey;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
 }
 
@@ -98,21 +89,83 @@
   padding: 10px;
   background-color: #fff;
   text-align: center;
-  box-shadow: 1px -2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
 }
 
-
-#fixedfilter{
-	position: absolute;
-	bottom: 25px;
-	background-color: #fff;
-	padding-top: 10px;
-	padding-bottom: 10px;
+#fixedfilter {
+  position: absolute;
+  bottom: 25px;
+  background-color: #fff;
+  padding: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
-#fixedheading{
-	position: relative;
-	background-color: #fff;
-	padding-bottom: 5px;
-	text-align: center;
+#fixedheading {
+  position: relative;
+  background-color: #fff;
+  padding-bottom: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .row.main-content {
+    flex-direction: column;
+  }
+
+  .filters {
+    width: 100%;
+  }
+
+  .courses {
+    padding-left: 0;
+  }
+
+  .course-card {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* src/App.css */
+
+/* Other existing styles */
+
+@media (max-width: 768px) {
+  .filters {
+    width: 80%; /* Reduce the width on mobile */
+    margin-bottom: 10px;
+  }
+
+  .course-card {
+    width: 100%;
+    height: auto;
+    padding: 20px; /* Increase padding for better spacing */
+    margin-bottom: 20px; /* More space between cards */
+    font-size: 16px; /* Increase text size for better readability */
+  }
+  }
+
+
+@media (max-width: 480px) {
+  .filters {
+    width: 100%; /* Full width for smaller screens */
+    padding: 8px; /* Reduce padding to save space */
+  }
+
+  .course-card {
+    padding: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .fixed-bottom {
+    padding: 5px;
+  }
+
+  .app {
+    overflow-y: auto; /* Ensures full-page scroll on mobile */
+  }
 }

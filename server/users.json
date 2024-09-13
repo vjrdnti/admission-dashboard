@@ -48,5 +48,35 @@
     "course": "Btech",
     "percentile": 93,
     "id": 5
+  },
+  {
+    "name": "Sasuke",
+    "email": "grand@hmail.com",
+    "password": "pw123",
+    "type": "student",
+    "course": "M.tech",
+    "percentile": 99,
+    "marksheet": {},
+    "id": 7
+  },
+  {
+    "name": "Siddharth",
+    "email": "trump@hmail.com",
+    "password": "pw123",
+    "type": "student",
+    "course": "Mtech",
+    "percentile": 98,
+    "marksheet": {},
+    "id": 8
+  },
+  {
+    "name": "Goku",
+    "email": "goku@hmail.com",
+    "password": "pw123",
+    "type": "student",
+    "course": "Mtech",
+    "percentile": 99,
+    "marksheet": {},
+    "id": 9
   }
 ]

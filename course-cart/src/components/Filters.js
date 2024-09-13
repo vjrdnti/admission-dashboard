@@ -1,88 +1,68 @@
 import React, { useState } from 'react';
+import './Filters.css';
 
 const Filters = ({ branches, districts, onApplyFilters, onResetFilters }) => {
-  const [selectedBranches, setSelectedBranches] = useState([]);
-  const [selectedDistricts, setSelectedDistricts] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState('');
 
-const handleBranchChange = (e) => {
-  const value = e.target.value;
-  setSelectedBranches((prevState) => {
-    //if (Array.isArray(prevState)) {
-      return prevState.includes(value)
-        ? prevState.filter(branch => branch !== value)
-        : [...prevState, value];
-    //}
-    //return [value]; // Initialize as an array if prevState is not an array
-  });
-};
-  
+  const handleBranchChange = (e) => {
+    setSelectedBranch(e.target.value);
+  };
+
   const handleDistrictChange = (e) => {
-  const value = e.target.value;
-  setSelectedDistricts((prevState) => {
-    if (Array.isArray(prevState)) {
-      return prevState.includes(value)
-        ? prevState.filter(district => district !== value)
-        : [...prevState, value];
-    }
-    return [value]; // Initialize as an array if prevState is not an array
-  });
-};
-
+    setSelectedDistrict(e.target.value);
+  };
 
   const handleApplyFilters = () => {
-    onApplyFilters(selectedBranches, selectedDistricts);
+    onApplyFilters([selectedBranch], [selectedDistrict]);
   };
 
   const handleResetFilters = () => {
-    setSelectedBranches([]);
-    setSelectedDistricts([]);
+    setSelectedBranch('');
+    setSelectedDistrict('');
     onResetFilters();
   };
 
   return (
-    <div className='filter'>
+    <div className="filter">
+      <div id="filtercontent">
+        <label htmlFor="branches">Branches:</label>
+        <select
+          id="branches"
+          value={selectedBranch}
+          onChange={handleBranchChange}
+        >
+          <option value="">Select Branch</option>
+          {branches.map((branch, index) => (
+            <option key={index} value={branch}>
+              {branch}
+            </option>
+          ))}
+        </select>
+      </div>
       
       <div id="filtercontent">
-        <label>Branches:</label>
-        <div>
-          {branches.map((branch, index) => (
-            <div key={index}>
-              <input
-                type="checkbox"
-                value={branch}
-                checked={selectedBranches.includes(branch)}
-                onChange={handleBranchChange}
-              />
-              <label>{branch}</label>
-            </div>
+        <label htmlFor="districts">Districts:</label>
+        <select
+          id="districts"
+          value={selectedDistrict}
+          onChange={handleDistrictChange}
+        >
+          <option value="">Select District</option>
+          {districts.map((district, index) => (
+            <option key={index} value={district}>
+              {district}
+            </option>
           ))}
-        </div>
+        </select>
       </div>
-      <br></br><br></br>
-       <div>
-        <label>Districts:</label>
-        {districts.map((district, index) => (
-          <div key={index}>
-            <input
-              type="checkbox"
-              value={district}
-              checked={selectedDistricts.includes(district)}
-              onChange={handleDistrictChange}
-            />
-            {district}
-        </div>
-        ))}
-        <br></br><br></br>
-     <div id="fixedfilter">
-     <button onClick={handleApplyFilters}>Apply Filters</button>
-     <span>  </span>
-     <button onClick={handleResetFilters}>Reset Filters</button>
-     </div>
-    </div>
       
+      <div>
+        <button onClick={handleApplyFilters}>Apply Filters</button>
+        <button onClick={handleResetFilters}>Reset Filters</button>
+      </div>
     </div>
   );
 };
 
 export default Filters;
-

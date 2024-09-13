@@ -3,7 +3,7 @@
   flex-direction: column;
   height: 100vh;
   padding: 2px;
-  
+  position: relative; /* Added to ensure .logout positioning is relative to .app */
 }
 
 .logout {
@@ -16,21 +16,38 @@
   border: none;
   cursor: pointer;
 }
+
 .content {
-    display: flex;
-    bottom: 3px;
-    max-height: 75%; 
+  display: flex;
+  flex-direction: row; /* Default for larger screens */
+  bottom: 3px;
+  max-height: 75%;
+  overflow: auto; /* Ensures content is scrollable if it exceeds max-height */
 }
 
 .left-column {
-    width: 40%;
+  width: 40%;
 }
 
 .right-column {
-    width: 60%;
+  width: 60%;
 }
 
 h3 {
   margin-bottom: 15px;
 }
 
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column; /* Stack columns vertically on smaller screens */
+  }
+
+  
+  
+
+  .logout {
+    position: static; 
+    margin-bottom: 10px; 
+  }
+}

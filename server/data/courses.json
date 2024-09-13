@@ -8,7 +8,7 @@
     "description": "Description1",
     "cost": 1200,
     "intake": 60,
-    "count": 0,
+    "count": 1,
     "cutoff": 92,
     "status": "verified"
   },
@@ -21,7 +21,7 @@
     "description": "Description2",
     "cost": 1200,
     "intake": 60,
-    "count": 1,
+    "count": 2,
     "cutoff": 91,
     "status": "verified"
   },
@@ -86,7 +86,7 @@
     "description": "Description7",
     "cost": 1200,
     "intake": 60,
-    "count": 0,
+    "count": 1,
     "cutoff": 90,
     "status": "unverified"
   },
@@ -151,7 +151,7 @@
     "description": "Description12",
     "cost": 1200,
     "intake": 60,
-    "count": 0,
+    "count": 1,
     "cutoff": 90,
     "status": "verified"
   },
@@ -271,5 +271,31 @@
     "college": "MIT",
     "status": "verified",
     "id": 21
+  },
+  {
+    "title": "B.Sc",
+    "description": "Desc45",
+    "branch": "Computer science",
+    "district": "Kolhapur",
+    "cost": "7000",
+    "intake": "80",
+    "cutoff": "70",
+    "count": 0,
+    "college": "MIT",
+    "status": "unverified",
+    "id": 22
+  },
+  {
+    "title": "BBA",
+    "description": "vh",
+    "branch": "ECE",
+    "district": "Pune",
+    "cost": "600",
+    "intake": "80",
+    "cutoff": "90",
+    "count": 0,
+    "college": "MIT",
+    "status": "unverified",
+    "id": 23
   }
 ]
